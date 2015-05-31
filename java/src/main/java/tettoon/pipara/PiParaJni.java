@@ -10,14 +10,17 @@ public class PiParaJni {
 
     private static boolean libraryLoaded;
 
-    private static Path tempSoFile;
+    private static Path tempNativeLibrary;
+
+    private static Path tempJniLibrary;
 
     static {
         if (isSupported()) {
             try {
-                tempSoFile = copyLibrary();
-                System.loadLibrary("pipara");
-                System.load(tempSoFile.toAbsolutePath().toString());
+                tempNativeLibrary = copyLibrary("libpipara.so", "libpipara");
+                System.load(tempNativeLibrary.toAbsolutePath().toString());
+                tempJniLibrary = copyLibrary("libpiparajni.so", "libpiparajni");
+                System.load(tempJniLibrary.toAbsolutePath().toString());
                 libraryLoaded = true;
             } catch (IOException e) {
                 e.printStackTrace(System.err);
@@ -27,10 +30,11 @@ public class PiParaJni {
         }
     }
 
-    private static Path copyLibrary() throws IOException {
-        try (InputStream is = PiParaJni.class.getResourceAsStream("libpiparajni.so")) {
-            Path temp = Files.createTempFile("libpiparajni", ".so");
+    private static Path copyLibrary(String name, String prefix) throws IOException {
+        try (InputStream is = PiParaJni.class.getResourceAsStream(name)) {
+            Path temp = Files.createTempFile(prefix, ".so");
             Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
+            temp.toFile().deleteOnExit();
             return temp;
         }
     }
