@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+group = 'tettoon.pipara'
+version = '1.0.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    testCompile "junit:junit:4.11"
+}
+
