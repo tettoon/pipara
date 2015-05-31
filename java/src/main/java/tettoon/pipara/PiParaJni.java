@@ -1,34 +1,52 @@
 package tettoon.pipara;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class PiParaJni {
 
     private static boolean libraryLoaded;
 
+    private static Path tempSoFile;
+
     static {
         if (isSupported()) {
             try {
-                System.loadLibrary("piparajni");
+                tempSoFile = copyLibrary();
+                System.loadLibrary("pipara");
+                System.load(tempSoFile.toAbsolutePath().toString());
                 libraryLoaded = true;
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
             } catch (UnsatisfiedLinkError e) {
                 e.printStackTrace(System.err);
             }
         }
     }
 
+    private static Path copyLibrary() throws IOException {
+        try (InputStream is = PiParaJni.class.getResourceAsStream("libpiparajni.so")) {
+            Path temp = Files.createTempFile("libpiparajni", ".so");
+            Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
+            return temp;
+        }
+    }
+
     public static boolean isLinux() {
-        String osName = System.getProperty("os.name");
-        return "liunx".equalsIgnoreCase(osName);
+        String osName = System.getProperty("os.name").toLowerCase();
+        return "linux".equals(osName);
     }
 
     public static boolean isArm() {
-        String osArch = System.getProperty("os.arch");
-        return "arm".equalsIgnoreCase(osArch);
+        String osArch = System.getProperty("os.arch").toLowerCase();
+        return "arm".equals(osArch);
     }
 
     public static boolean isSupported() {
-        return (isLinux() && isArm());
+        return isArm() && isLinux();
     }
 
     public PiParaJni() throws IOException {
