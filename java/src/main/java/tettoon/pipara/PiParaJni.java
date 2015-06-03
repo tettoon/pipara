@@ -10,15 +10,11 @@ public class PiParaJni {
 
     private static boolean libraryLoaded;
 
-    private static Path tempNativeLibrary;
-
     private static Path tempJniLibrary;
 
     static {
         if (isSupported()) {
             try {
-                tempNativeLibrary = copyLibrary("libpipara.so", "libpipara");
-                System.load(tempNativeLibrary.toAbsolutePath().toString());
                 tempJniLibrary = copyLibrary("libpiparajni.so", "libpiparajni");
                 System.load(tempJniLibrary.toAbsolutePath().toString());
                 libraryLoaded = true;
