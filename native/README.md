@@ -1,15 +1,27 @@
 PiPara Shared Library and CLI
 =============================
 
+## Build
+  1. Clean this directory. (as needed)
+    ```sh
+    make clean
+    ```
+  1. Build.
+    ```sh
+    make
+    ```
+
 ## Install
-  ```sh
-  sudo make install
-  ```
+  1. Install files as root.
+    ```sh
+    sudo make install
+    ```
 
 ## Usage
-  ```sh
-  sudo piparactl 7f
-  ```
+  1. For example, output 0x7f.
+    ```sh
+    sudo piparactl 7f
+    ```
 
 ## Shared Library (libpipara.so)
   * See "piparactl.c".
